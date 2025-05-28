@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <title>Reporte Financiero y de Consumo</title>
     <style>
         body {
@@ -9,11 +9,11 @@
             font-size: 12px;
             line-height: 1.5;
             color: #333;
-            margin: 40px;
+            margin: 20px;
         }
 
         h1 {
-            font-size: 20px;
+            font-size: 18px;
             color: #222;
             margin-bottom: 10px;
             border-bottom: 2px solid #7f1d1d;
@@ -21,40 +21,34 @@
         }
 
         h3 {
-            font-size: 16px;
+            font-size: 15px;
             color: #7f1d1d;
             margin-top: 30px;
             margin-bottom: 10px;
         }
 
-        p {
-            margin: 4px 0;
-        }
-
         .summary {
-            margin-top: 10px;
             padding: 10px;
             background-color: #fef3c7;
             border-left: 4px solid #d97706;
+            margin-bottom: 20px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 15px;
+            margin-top: 10px;
+        }
+
+        th, td {
+            padding: 8px;
+            border: 1px solid #ccc;
         }
 
         th {
             background-color: #f2f2f2;
-            color: #000;
+            text-align: left;
             font-weight: bold;
-            padding: 8px;
-            border: 1px solid #ccc;
-        }
-
-        td {
-            padding: 8px;
-            border: 1px solid #ccc;
         }
 
         tr:nth-child(even) {
@@ -67,6 +61,12 @@
             text-align: center;
             color: #999;
         }
+
+        .currency {
+            color: green;
+            font-weight: bold;
+        }
+
     </style>
 </head>
 <body>
@@ -76,10 +76,30 @@
     <h3>Resumen de Ventas</h3>
     <div class="summary">
         <p><strong>Total de pedidos:</strong> {{ $totalPedidos ?? 0 }}</p>
-        <p><strong>Total de ventas:</strong> ${{ number_format($totalVentas ?? 0, 0, ',', '.') }}</p>
+        <p><strong>Total de ventas:</strong> <span class="currency">${{ number_format($totalVentas ?? 0, 0, ',', '.') }}</span></p>
     </div>
 
-    <h3>Detalle de Pedidos</h3>
+    <h3>Total Vendido por Plato</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Plato</th>
+                <th>Cantidad Total</th>
+                <th>Total Vendido</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($totalesPorPlato as $plato)
+                <tr>
+                    <td>{{ $plato['nombre'] }}</td>
+                    <td>{{ $plato['cantidad_total'] }}</td>
+                    <td class="currency">${{ number_format($plato['total_valor'], 0, ',', '.') }}</td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+
+    <h3>Pedidos Completos</h3>
     <table>
         <thead>
             <tr>
@@ -93,20 +113,20 @@
         </thead>
         <tbody>
             @foreach($pedidos as $pedido)
-            <tr>
-                <td>{{ $pedido->id }}</td>
-                <td>{{ $pedido->cliente->nombre ?? 'N/A' }}</td>
-                <td>{{ $pedido->plato->nombre ?? 'N/A' }}</td>
-                <td>{{ $pedido->cantidad }}</td>
-                <td>${{ number_format($pedido->totalValor, 0, ',', '.') }}</td>
-                <td>{{ $pedido->created_at->format('d/m/Y') }}</td>
-            </tr>
+                <tr>
+                    <td>{{ $pedido->id }}</td>
+                    <td>{{ $pedido->cliente->nombre ?? 'N/A' }}</td>
+                    <td>{{ $pedido->plato->nombre ?? 'N/A' }}</td>
+                    <td>{{ $pedido->cantidad }}</td>
+                    <td class="currency">${{ number_format($pedido->totalCalculado ?? 0, 0, ',', '.') }}</td>
+                    <td>{{ $pedido->created_at->format('d/m/Y') }}</td>
+                </tr>
             @endforeach
         </tbody>
     </table>
 
     <div class="footer">
-        Generado automáticamente por Rinconcito - {{ $generatedAt }}
+        Generado automáticamente por Rinconcito - {{ $generatedAt ?? now()->format('d/m/Y H:i') }}
     </div>
 </body>
 </html>

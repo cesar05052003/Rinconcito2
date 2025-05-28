@@ -79,6 +79,7 @@
                                 <th class="py-3 px-4 text-left">Plato</th>
                                 <th class="py-3 px-4 text-left">Cantidad</th>
                                 <th class="py-3 px-4 text-left">Estado</th>
+                                <th class="py-3 px-4 text-left">Total Valor</th>
                                 <th class="py-3 px-4 text-left">Acciones</th>
                             </tr>
                         </thead>
@@ -100,6 +101,7 @@
                                             {{ ucfirst($pedido->estado) }}
                                         </span>
                                     </td>
+                                    <td class="py-3 px-4">${{ number_format($pedido->totalValor, 2) }}</td>
                                     <td class="py-3 px-4">
                                         <form method="POST" action="{{ route('chef.pedido.actualizar-agrupado') }}" class="flex items-center space-x-2">
                                             @csrf
@@ -121,6 +123,9 @@
                             @endforeach
                         </tbody>
                     </table>
+                    <div class="p-4 text-right font-semibold text-lg bg-amber-100 rounded-b-lg">
+                        Total Ventas: ${{ number_format($totalVentas, 2) }}
+                    </div>
                 </div>
             @endif
         </div>

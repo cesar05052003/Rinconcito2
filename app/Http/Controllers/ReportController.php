@@ -8,6 +8,7 @@ use App\Models\Plato;
 use PDF;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\PedidosExport;
+use Illuminate\Support\Facades\Auth;
 
 class ReportController extends Controller
 {
@@ -22,6 +23,9 @@ class ReportController extends Controller
     {
         $data = $this->getReportData($request);
 
+        // Añadir la hora de generación para mostrar en el PDF
+        $generatedAt = now()->format('d/m/Y H:i');
+
         // Ensure data is passed as an array with keys
         $pdf = PDF::loadView('reports.pdf', [
             'pedidos' => $data['pedidos'] ?? [],
@@ -29,6 +33,7 @@ class ReportController extends Controller
             'totalPedidos' => $data['totalPedidos'] ?? 0,
             'startDate' => $data['startDate'] ?? null,
             'endDate' => $data['endDate'] ?? null,
+            'generatedAt' => $generatedAt,
         ]);
         return $pdf->download('reporte_financiero_consumo.pdf');
     }
@@ -49,10 +54,21 @@ class ReportController extends Controller
             $query->whereDate('created_at', '<=', $endDate);
         }
 
+        $query->whereHas('plato', function ($q) {
+            $q->where('user_id', Auth::id());
+        });
+
         $pedidos = $query->with('plato', 'cliente')->get();
 
-        // Calculate totals and other report data as needed
-        $totalVentas = $pedidos->sum('total');
+        // Calcular total por pedido y total general de ventas
+        $totalVentas = 0;
+        foreach ($pedidos as $pedido) {
+            $precio = $pedido->plato->precio ?? 0;
+            $cantidad = $pedido->cantidad ?? 1;
+            $pedido->totalValor = $precio * $cantidad;
+            $totalVentas += $pedido->totalValor;
+        }
+
         $totalPedidos = $pedidos->count();
 
         return [

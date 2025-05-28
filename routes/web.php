@@ -60,6 +60,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/cliente/carrito/confirmar', [App\Http\Controllers\ClienteController::class, 'confirmarPedido'])->name('cliente.carrito.confirmar');
     Route::post('/cliente/carrito/actualizar', [App\Http\Controllers\ClienteController::class, 'actualizarCantidadCarrito'])->name('cliente.carrito.actualizar');
     Route::delete('/cliente/carrito/{id}', [App\Http\Controllers\ClienteController::class, 'eliminarPlatoCarrito'])->name('cliente.carrito.eliminar');
+
+    // Nueva ruta para vista separada de reseñas
+    Route::get('/cliente/reseñas', [App\Http\Controllers\ClienteController::class, 'mostrarResenas'])->name('cliente.reseñas');
+
     // Rutas para chef
     Route::get('/chef', [App\Http\Controllers\ChefController::class, 'index'])->name('chef.index');
     Route::put('/chef/pedido/{id}', [App\Http\Controllers\ChefController::class, 'updatePedido'])->name('chef.pedido.update');

@@ -18,10 +18,19 @@ class ChefController extends Controller
             ->with('cliente', 'plato')
             ->get();
 
+        // Calcular total por pedido y total general de ventas
+        $totalVentas = 0;
+        foreach ($pedidos as $pedido) {
+            $precio = $pedido->plato->precio ?? 0;
+            $cantidad = $pedido->cantidad ?? 1;
+            $pedido->totalValor = $precio * $cantidad;
+            $totalVentas += $pedido->totalValor;
+        }
+
         // Obtener platos del chef autenticado
         $platos = Plato::where('user_id', auth()->id())->get();
 
-        return view('chef', compact('pedidos', 'platos'));
+        return view('chef', compact('pedidos', 'platos', 'totalVentas'));
     }
 
     public function updatePedido(Request $request, $id)
@@ -146,7 +155,11 @@ class ChefController extends Controller
 
     public function mandarPedido()
     {
+        $chefId = auth()->id();
         $pedidos = Pedido::whereIn('estado', ['pendiente', 'en preparación', 'listo'])
+            ->whereHas('plato', function ($query) use ($chefId) {
+                $query->where('user_id', $chefId);
+            })
             ->with('plato', 'cliente')
             ->get();
         return view('chef.mandar-pedido', compact('pedidos'));

@@ -1,11 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ReportController;
-use App\Http\Controllers\PlatoController;
+use App\Http\Controllers\AdminController;
 
-Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
-Route::get('/reports/pdf', [ReportController::class, 'generatePdf'])->name('reports.pdf');
-// Route::get('/reports/excel', [ReportController::class, 'generateExcel'])->name('reports.excel');
+// Ruta para la vista de reportes en admin
+Route::get('/admin/reportes', [AdminController::class, 'reportes'])->name('admin.reportes');
 
-Route::post('/chef/plato/{id}/updateCantidad', [PlatoController::class, 'updateCantidad'])->name('chef.plato.updateCantidad');
+Route::get('/admin/reportes/pdf', [AdminController::class, 'reportePdf'])->name('admin.reportes.pdf');

@@ -4,13 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\Pedido;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RepartidorController extends Controller
 {
     public function dashboard()
     {
-        // Obtener pedidos que no estén entregados para que el repartidor pueda gestionarlos
-        $pedidos = Pedido::whereIn('estado', ['en_espera', 'listo'])->with('plato', 'cliente')->get();
+        $chefId = Auth::id();
+        // Obtener pedidos que no estén entregados y que sean de platos del chef logueado
+        $pedidos = Pedido::whereIn('estado', ['en_espera', 'listo'])
+            ->whereHas('plato', function ($query) use ($chefId) {
+                $query->where('user_id', $chefId);
+            })
+            ->with('plato', 'cliente')
+            ->get();
         return view('repartidor', compact('pedidos'));
     }
 

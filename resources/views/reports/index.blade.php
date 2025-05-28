@@ -4,7 +4,7 @@
             📈 Generar Reportes Financieros y de Consumo
         </h2>
     </x-slot>
- <div class="py-12" style="background-color: #FEF3C7;">
+ <div class="py-12" style="background-color:rgb(217, 212, 204);">
     <div class="container py-5">
 
         {{-- Filtro de fechas --}}
@@ -73,7 +73,7 @@
                                 <td>{{ $pedido->cliente->nombre ?? 'N/A' }}</td>
                                 <td>{{ $pedido->plato->nombre ?? 'N/A' }}</td>
                                 <td>{{ $pedido->cantidad }}</td>
-                                <td class="text-success fw-bold">${{ number_format($pedido->total, 0, ',', '.') }}</td>
+                                <td class="text-success fw-bold">${{ number_format($pedido->totalValor ?? 0, 0, ',', '.') }}</td>
                                 <td>{{ $pedido->created_at->format('d/m/Y') }}</td>
                             </tr>
                             @empty
@@ -88,6 +88,8 @@
             </div>
         </div>
         @endif
+
+        <a href="{{ url('/chef/inventario') }}" class="btn btn-secondary mt-3">Regresar</a>
 
     </div>
 

@@ -120,4 +120,11 @@ class ClienteController extends Controller
 
         return redirect()->route('cliente.carrito')->with('error', 'El plato no está en el carrito.');
     }
+
+    // Nuevo método para mostrar la vista de reseñas con solo el formulario
+    public function mostrarResenas()
+    {
+        $platos = Plato::all();
+        return view('cliente.reseñas', compact('platos'));
+    }
 }
