@@ -39,11 +39,11 @@
             <!-- Usuarios -->
             <div class="bg-white p-6 shadow rounded-lg">
                 <h4 class="text-lg font-semibold text-gray-800 mb-4">👥 Usuarios Registrados</h4>
-                @if($usuarios->isEmpty())
+                @if($clientes->isEmpty())
                     <p class="text-gray-500">No hay usuarios registrados.</p>
                 @else
                     <ul class="space-y-1 text-gray-700">
-                        @foreach($usuarios as $usuario)
+                        @foreach($clientes as $usuario)
                             <li class="flex justify-between items-center">
                                 <span>- {{ $usuario->name }} <span class="text-sm text-gray-500">({{ $usuario->email }})</span></span>
                                 <span class="space-x-2">
@@ -67,11 +67,12 @@
                     <p class="text-gray-500">No hay chefs registrados.</p>
                 @else
                     <ul class="space-y-1 text-gray-700">
-                        @foreach($chefs as $chef)
+                            @foreach($chefs as $chef)
                             <li class="flex justify-between items-center">
                                 <span>- {{ $chef->name }} <span class="text-sm text-gray-500">({{ $chef->email }})</span></span>
                                 <span class="space-x-2">
                                     <a href="{{ route('admin.users.edit', $chef) }}" class="text-blue-600 hover:underline">Editar</a>
+                                    <a href="{{ route('admin.chef.details', $chef->id) }}" class="text-green-600 hover:underline">Ver detalles</a>
                                     <form action="{{ route('admin.users.destroy', $chef) }}" method="POST" class="inline" onsubmit="return confirm('¿Estás seguro de eliminar este usuario?');">
                                         @csrf
                                         @method('DELETE')
@@ -79,7 +80,7 @@
                                     </form>
                                 </span>
                             </li>
-                        @endforeach
+                            @endforeach
                     </ul>
                 @endif
             </div>

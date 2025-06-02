@@ -4,21 +4,21 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddUserIdToPlatosTable extends Migration
+class FixImagenColumnInPlatosTable extends Migration
 {
     public function up()
     {
         Schema::table('platos', function (Blueprint $table) {
-            if (!Schema::hasColumn('platos', 'user_id')) {
-                $table->bigInteger('user_id')->unsigned()->after('id');
-            }
+            // Cambiar la columna imagen para que sea nullable y sin valor por defecto
+            $table->string('imagen')->nullable()->default(null)->change();
         });
     }
 
     public function down()
     {
         Schema::table('platos', function (Blueprint $table) {
-            $table->dropColumn('user_id');
+            // Revertir cambios si es necesario
+            $table->string('imagen')->nullable()->change();
         });
     }
 }

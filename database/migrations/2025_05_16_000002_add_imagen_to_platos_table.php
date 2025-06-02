@@ -8,15 +8,19 @@ class AddImagenToPlatosTable extends Migration
 {
     public function up()
     {
-        Schema::table('platos', function (Blueprint $table) {
-            $table->string('imagen')->nullable()->after('precio');
-        });
+        if (!Schema::hasColumn('platos', 'imagen')) {
+            Schema::table('platos', function (Blueprint $table) {
+                $table->string('imagen')->nullable()->after('precio')->default(null);
+            });
+        }
     }
 
     public function down()
     {
-        Schema::table('platos', function (Blueprint $table) {
-            $table->dropColumn('imagen');
-        });
+        if (Schema::hasColumn('platos', 'imagen')) {
+            Schema::table('platos', function (Blueprint $table) {
+                $table->dropColumn('imagen');
+            });
+        }
     }
 }

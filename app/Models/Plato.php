@@ -50,4 +50,13 @@ class Plato extends Model
         }
         return $this->precio;
     }
+
+    // Agregar accesor para obtener la URL completa de la imagen
+    public function getImagenUrlAttribute()
+    {
+        if ($this->imagen) {
+            return asset($this->imagen);
+        }
+        return null;
+    }
 }

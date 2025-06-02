@@ -4,7 +4,7 @@
             👨‍🍳 Agregar Nuevo Plato
         </h2>
     </x-slot>
- <div class="py-12" style="background-color: #FEF3C7;">
+ <div class="py-12" style="background-color: #f4eedb;">
     <div class="py-12 max-w-3xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white shadow-md rounded-lg p-8 space-y-6">
             @if ($errors->any())
@@ -83,6 +83,8 @@
         accept="image/*" onchange="previewImage(event)">
     <img id="imagePreview" src="#" alt="Vista previa de la imagen" class="mt-4 max-h-48 hidden rounded-md" />
 </div>
+
+               
 
 <script>
     function previewImage(event) {

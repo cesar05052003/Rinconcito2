@@ -53,7 +53,9 @@
         .btn-repartidor {
             background-color: var(--cafemuy);
         }
-
+     .btn-admin {
+            background-color: var(--verdemuy);
+        }
         h2 {
             color: var(--rojomuy);
         }
@@ -158,11 +160,42 @@
             <a class="btn btn-usuario px-3 py-2 rounded fw-bold fs-6" href="{{ route('register', ['rol' => 'cliente']) }}">Usuario</a>
             <a class="btn btn-chef px-3 py-2 rounded fw-bold fs-6" href="{{ route('register', ['rol' => 'chef']) }}">Chef</a>
             <a class="btn btn-repartidor px-3 py-2 rounded fw-bold fs-6" href="/acceso/repartidor">Repartidor</a>
+            <a class="btn btn-admin px-3 py-2 rounded fw-bold fs-6" href="{{ route('admin.dashboard') }}">Administrador</a>
         </div>
     </div>
 </nav>
 
-   <section class="ofertas-especiales py-5">
+<div class="container my-5">
+    <div class="row g-4 justify-content-center">
+        @php
+            $dishes = [
+                ['image' => '1747522559_bandeja-paisa.png', 'alt' => 'Bandeja Paisa tradicional colombiana', 'title' => 'Bandeja Paisa'],
+                ['image' => '1747522514_plato-pescado.png', 'alt' => 'Plato de pescado frito con guarnición', 'title' => 'Pescado Frito'],
+                ['image' => '1747522453_arepas-rellenas.png', 'alt' => 'Arepas rellenas típicas', 'title' => 'Arepas Rellenas']
+            ];
+        @endphp
+
+        @foreach ($dishes as $dish)
+            <div class="col-md-4">
+                <div class="card shadow-lg h-100">
+                    <img 
+                        src="{{ asset('images/' . $dish['image']) }}" 
+                        class="card-img-top" 
+                        alt="{{ $dish['alt'] }}" 
+                        style="height: 300px; object-fit: cover;"
+                    >
+                    <div class="card-body text-center">
+                        <h5 class="card-title">{{ $dish['title'] }}</h5>
+                       
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    </div>
+</div>
+
+
+<section class="ofertas-especiales py-5">
     <div class="container">
         @if($platosEnOferta->count() > 0)
         <h2 class="text-center mb-4 fw-semibold">Ofertas Especiales</h2>
@@ -170,7 +203,7 @@
             <div class="carousel-inner rounded shadow" style="height: 400px;">
                 @foreach($platosEnOferta as $index => $plato)
                     <div class="carousel-item @if($index == 0) active @endif h-100">
-                        <img src="{{ asset($plato->imagen) }}" class="d-block w-100 h-100 object-fit-cover" alt="{{ $plato->nombre }}">
+                        <img src="{{ $plato->imagen_url }}" class="d-block w-100 h-100 object-fit-cover" alt="{{ $plato->nombre }}">
                         <div class="carousel-caption bg-dark bg-opacity-50 rounded p-3">
                             <h5 class="text-white fw-bold">{{ $plato->nombre }}</h5>
                             <p class="text-light">{{ $plato->descripcion }}</p>
@@ -208,16 +241,16 @@
             <h2 class="mb-4 text-center">Platos Destacados</h2>
             <div id="carouselPlatos" class="carousel slide mb-5" data-bs-ride="carousel">
                 <div class="carousel-inner rounded shadow" style="height: 400px;">
-                    @foreach($platos->take(3) as $index => $plato)
-                        <div class="carousel-item @if($index == 0) active @endif h-100">
-                            <img src="{{ asset($plato->imagen) }}" class="d-block w-100 h-100 object-fit-cover" alt="{{ $plato->nombre }}">
-                            <div class="carousel-caption p-3">
-                                <h5 class="text-white fw-bold">{{ $plato->nombre }}</h5>
-                                <p class="text-light">{{ $plato->descripcion }}</p>
-                                <p class="text-light fw-bold">Precio: ${{ number_format($plato->precio, 2) }}</p>
-                            </div>
+                @foreach($platos->take(3) as $index => $plato)
+                    <div class="carousel-item @if($index == 0) active @endif h-100">
+                        <img src="{{ $plato->imagen_url }}" class="d-block w-100 h-100 object-fit-cover" alt="{{ $plato->nombre }}">
+                        <div class="carousel-caption p-3">
+                            <h5 class="text-white fw-bold">{{ $plato->nombre }}</h5>
+                            <p class="text-light">{{ $plato->descripcion }}</p>
+                            <p class="text-light fw-bold">Precio: ${{ number_format($plato->precio, 2) }}</p>
                         </div>
-                    @endforeach
+                    </div>
+                @endforeach
                 </div>
                 <button class="carousel-control-prev" type="button" data-bs-target="#carouselPlatos" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -233,7 +266,7 @@
                 @foreach($platos as $plato)
                     <div class="col-md-4 mb-4">
                         <div class="card shadow-sm h-100">
-                            <img src="{{ asset($plato->imagen) }}" class="card-img-top" style="height: 200px; object-fit: cover;">
+<img src="{{ $plato->imagen_url }}" class="card-img-top" style="height: 200px; object-fit: cover;">
                             <div class="card-body">
                                 <h5 class="card-title">{{ $plato->nombre }}</h5>
                                 <p class="card-text">{{ $plato->descripcion }}</p>
@@ -339,6 +372,35 @@
     margin-top: 0.5rem;
 }
 </style>
+
+
+<div class="container my-5">
+    <div class="row g-4 justify-content-center">
+        @php
+            $dishes = [
+                ['image' => '1747604455_saludable.jpg', 'alt' => 'Comida saludable con vegetales', 'title' => 'Comida Saludable'],
+                ['image' => '1748816611_mote.jpg', 'alt' => 'Plato típico Mote', 'title' => 'Mote'],
+                ['image' => '1747627934_harina-de-maiz-with-fruit.jpg', 'alt' => 'Harina de maíz con frutas', 'title' => 'Harina de Maíz con Frutas']
+            ];
+        @endphp
+
+        @foreach ($dishes as $dish)
+            <div class="col-md-4">
+                <div class="card shadow-lg h-100">
+                    <img 
+                        src="{{ asset('images/' . $dish['image']) }}" 
+                        class="card-img-top" 
+                        alt="{{ $dish['alt'] }}" 
+                        style="height: 300px; object-fit: cover;"
+                    >
+                    <div class="card-body text-center">
+                        <h5 class="card-title">{{ $dish['title'] }}</h5>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    </div>
+</div>
 
 
 <footer class="mt-5 pt-5 pb-4">

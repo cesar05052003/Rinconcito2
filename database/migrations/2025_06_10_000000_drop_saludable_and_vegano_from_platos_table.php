@@ -14,9 +14,9 @@ class DropSaludableAndVeganoFromPlatosTable extends Migration
     public function up()
     {
         Schema::table('platos', function (Blueprint $table) {
-            if (Schema::hasColumn('platos', 'saludable')) {
-                $table->dropColumn('saludable');
-            }
+            // if (Schema::hasColumn('platos', 'saludable')) {
+            //     $table->dropColumn('saludable');
+            // }
             if (Schema::hasColumn('platos', 'vegano')) {
                 $table->dropColumn('vegano');
             }

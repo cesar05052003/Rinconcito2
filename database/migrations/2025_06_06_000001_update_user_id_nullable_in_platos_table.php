@@ -8,37 +8,41 @@ class UpdateUserIdNullableInPlatosTable extends Migration
 {
     public function up()
     {
-        // Primero eliminar la clave foránea en una llamada separada
-        Schema::table('platos', function (Blueprint $table) {
-            $table->dropForeign(['user_id']);
-        });
+        if (Schema::hasColumn('platos', 'user_id')) {
+            // Primero eliminar la clave foránea en una llamada separada
+            Schema::table('platos', function (Blueprint $table) {
+                $table->dropForeign(['user_id']);
+            });
 
-        // Luego cambiar la columna a nullable
-        Schema::table('platos', function (Blueprint $table) {
-            $table->unsignedBigInteger('user_id')->nullable()->change();
-        });
+            // Luego cambiar la columna a nullable
+            Schema::table('platos', function (Blueprint $table) {
+                $table->unsignedBigInteger('user_id')->nullable()->change();
+            });
 
-        // Finalmente, agregar la clave foránea nuevamente
-        Schema::table('platos', function (Blueprint $table) {
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-        });
+            // Finalmente, agregar la clave foránea nuevamente
+            Schema::table('platos', function (Blueprint $table) {
+                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            });
+        }
     }
 
     public function down()
     {
-        // Primero eliminar la clave foránea en una llamada separada
-        Schema::table('platos', function (Blueprint $table) {
-            $table->dropForeign(['user_id']);
-        });
+        if (Schema::hasColumn('platos', 'user_id')) {
+            // Primero eliminar la clave foránea en una llamada separada
+            Schema::table('platos', function (Blueprint $table) {
+                $table->dropForeign(['user_id']);
+            });
 
-        // Luego cambiar la columna a no nullable
-        Schema::table('platos', function (Blueprint $table) {
-            $table->unsignedBigInteger('user_id')->nullable(false)->change();
-        });
+            // Luego cambiar la columna a no nullable
+            Schema::table('platos', function (Blueprint $table) {
+                $table->unsignedBigInteger('user_id')->nullable(false)->change();
+            });
 
-        // Finalmente, agregar la clave foránea nuevamente
-        Schema::table('platos', function (Blueprint $table) {
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-        });
+            // Finalmente, agregar la clave foránea nuevamente
+            Schema::table('platos', function (Blueprint $table) {
+                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            });
+        }
     }
 }

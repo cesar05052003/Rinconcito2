@@ -4,7 +4,7 @@
             📈 Generar Reportes Financieros y de Consumo
         </h2>
     </x-slot>
- <div class="py-12" style="background-color:rgb(217, 212, 204);">
+ <div class="py-12" style="background-color: #f4eedb;">
     <div class="container py-5">
 
         {{-- Filtro de fechas --}}

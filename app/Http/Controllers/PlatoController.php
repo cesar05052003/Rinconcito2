@@ -139,7 +139,10 @@ class PlatoController extends Controller
             $image = $request->file('imagen');
             $imageName = time().'_'.$image->getClientOriginalName();
             $image->move(public_path('images'), $imageName);
-            $data['imagen'] = 'images/' . $imageName;
+            $data['imagen'] = 'images/' . $imageName; // Guardar con prefijo images/
+        } else {
+            // Asignar una imagen por defecto si no se sube ninguna
+            $data['imagen'] = 'images/default.png';
         }
 
         $data['user_id'] = auth()->id();
@@ -156,11 +159,19 @@ class PlatoController extends Controller
             'descripcion' => 'nullable|string',
             'ingredientes' => 'nullable|string',
             'precio' => 'required|numeric',
+            'imagen' => 'nullable|image',
             'cantidad' => 'nullable|integer',
             'descuento_porcentaje' => 'nullable|integer|min:0|max:100',
             'fecha_inicio_oferta' => 'nullable|date',
             'fecha_fin_oferta' => 'nullable|date|after_or_equal:fecha_inicio_oferta',
         ]);
+
+        if ($request->hasFile('imagen')) {
+            $image = $request->file('imagen');
+            $imageName = time().'_'.$image->getClientOriginalName();
+            $image->move(public_path('images'), $imageName);
+            $data['imagen'] = 'images/' . $imageName; // Guardar con prefijo images/
+        }
 
         // Asignar saludable a false para evitar error de validación
         $data['saludable'] = false;

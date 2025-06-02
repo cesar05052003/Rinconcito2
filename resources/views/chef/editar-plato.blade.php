@@ -4,7 +4,7 @@
             Editar Plato
         </h2>
     </x-slot>
-
+<div class="py-12" style="background-color: #f4eedb;">
     <div class="py-12 max-w-3xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white shadow-sm rounded-lg p-6">
             @if ($errors->any())
@@ -62,6 +62,7 @@
                 </div>
 
 
+                
                 <a href="{{ route('chef.index') }}" class="inline-block bg-gray-500 text-white rounded-md px-4 py-2 hover:bg-gray-600 mr-4">
                     Regresar
                 </a>

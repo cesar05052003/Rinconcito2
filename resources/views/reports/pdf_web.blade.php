@@ -1,4 +1,5 @@
 <x-app-layout>
+<div class="py-12" style="background-color: #f4eedb;">
     <x-slot name="header">
         <h2 class="font-semibold text-2xl text-rojomuy leading-tight">
             Reporte Financiero y de Consumo (Vista Web)

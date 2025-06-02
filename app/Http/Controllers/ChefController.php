@@ -10,13 +10,15 @@ class ChefController extends Controller
 {
     public function index()
     {
-        // Obtener pedidos pendientes sin agrupar para incluir estado
+        $chefId = auth()->id();
+
+        // Paginación para pedidos pendientes
         $pedidos = Pedido::whereIn('estado', ['pendiente', 'en preparación', 'listo_entrega', 'listo'])
-            ->whereHas('plato', function ($query) {
-                $query->where('user_id', auth()->id());
+            ->whereHas('plato', function ($query) use ($chefId) {
+                $query->where('user_id', $chefId);
             })
             ->with('cliente', 'plato')
-            ->get();
+            ->paginate(15);
 
         // Calcular total por pedido y total general de ventas
         $totalVentas = 0;
@@ -27,8 +29,8 @@ class ChefController extends Controller
             $totalVentas += $pedido->totalValor;
         }
 
-        // Obtener platos del chef autenticado
-        $platos = Plato::where('user_id', auth()->id())->get();
+        // Paginación para platos del chef autenticado
+        $platos = Plato::where('user_id', $chefId)->paginate(15);
 
         return view('chef', compact('pedidos', 'platos', 'totalVentas'));
     }
@@ -171,19 +173,21 @@ class ChefController extends Controller
         $platoId = $request->input('plato_id');
         $nuevoEstado = $request->input('estado');
 
-        $pedido = Pedido::where('cliente_id', $clienteId)
+        $pedidos = Pedido::where('cliente_id', $clienteId)
             ->where('plato_id', $platoId)
-            ->first();
+            ->get();
 
-        if ($pedido) {
-            $pedido->estado = $nuevoEstado;
-            $pedido->save();
+        if ($pedidos->isNotEmpty()) {
+            foreach ($pedidos as $pedido) {
+                $pedido->estado = $nuevoEstado;
+                $pedido->save();
 
-            if (in_array($nuevoEstado, ['listo', 'listo_entrega'])) {
-                $plato = Plato::find($platoId);
-                if ($plato && $plato->cantidad > 0) {
-                    $plato->cantidad = max(0, $plato->cantidad - $pedido->cantidad);
-                    $plato->save();
+                if (in_array($nuevoEstado, ['listo', 'listo_entrega'])) {
+                    $plato = Plato::find($platoId);
+                    if ($plato && $plato->cantidad > 0) {
+                        $plato->cantidad = max(0, $plato->cantidad - $pedido->cantidad);
+                        $plato->save();
+                    }
                 }
             }
         }

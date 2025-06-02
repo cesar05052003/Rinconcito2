@@ -6,6 +6,7 @@
     </x-slot>
 
     <div class="py-12 bg-gray-50">
+    <div class="py-12" style="background-color: #f4eedb;">
         <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white shadow-lg rounded-xl p-8 space-y-6 border border-gray-200">
                 <div class="text-center">

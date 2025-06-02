@@ -17,6 +17,7 @@ Route::post('/guardar-resena', [PlatoController::class, 'guardarResena'])->name(
 Route::get('/register', [RegisteredUserController::class, 'create'])->middleware('guest')->name('register');
 Route::post('/register', [RegisteredUserController::class, 'store'])->middleware('guest');
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
+Route::post('/admin/logout', [AuthenticatedSessionController::class, 'destroyAdmin'])->name('admin.logout')->middleware('auth');
 
 // Selector de acceso por rol
 Route::get('/acceso/{rol}', function ($rol) {
@@ -91,15 +92,25 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/repartidor/pedido/{id}/actualizar-estado', [App\Http\Controllers\RepartidorController::class, 'actualizarEstado'])->name('repartidor.pedido.actualizarEstado');
 });
 
-Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
+Route::middleware(['auth', \App\Http\Middleware\AdminMiddleware::class])->group(function () {
+    Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
 
-Route::get('/admin/users/create', [AdminController::class, 'create'])->name('admin.users.create');
-Route::post('/admin/users', [AdminController::class, 'store'])->name('admin.users.store');
-Route::get('/admin/users/{user}/edit', [AdminController::class, 'edit'])->name('admin.users.edit');
-Route::put('/admin/users/{user}', [AdminController::class, 'update'])->name('admin.users.update');
-Route::delete('/admin/users/{user}', [AdminController::class, 'destroy'])->name('admin.users.destroy');
+    Route::get('/admin/users/create', [AdminController::class, 'create'])->name('admin.users.create');
+    Route::post('/admin/users', [AdminController::class, 'store'])->name('admin.users.store');
+    Route::get('/admin/users/{user}/edit', [AdminController::class, 'edit'])->name('admin.users.edit');
+    Route::put('/admin/users/{user}', [AdminController::class, 'update'])->name('admin.users.update');
+    Route::delete('/admin/users/{user}', [AdminController::class, 'destroy'])->name('admin.users.destroy');
 
-Route::delete('/admin/platos/{id}', [PlatoController::class, 'destroy'])->name('admin.platos.destroy');
+    Route::get('/admin/platos', [PlatoController::class, 'index'])->name('admin.platos.index');
+    Route::get('/admin/platos/create', [PlatoController::class, 'create'])->name('admin.platos.create');
+    Route::post('/admin/platos', [PlatoController::class, 'store'])->name('admin.platos.store');
+    Route::get('/admin/platos/{id}/edit', [PlatoController::class, 'edit'])->name('admin.platos.edit');
+    Route::put('/admin/platos/{id}', [PlatoController::class, 'update'])->name('admin.platos.update');
+    Route::delete('/admin/platos/{id}', [PlatoController::class, 'destroy'])->name('admin.platos.destroy');
+
+    // Nueva ruta para detalles de chef
+    Route::get('/admin/chef/{id}', [AdminController::class, 'showChefDetails'])->name('admin.chef.details');
+});
 
 require __DIR__.'/auth.php';
 

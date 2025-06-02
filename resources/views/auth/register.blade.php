@@ -3,7 +3,7 @@
 <!-- Logo personalizado -->
     <div class="text-center mb-4">
         <a href="/">
-            <img src="{{ asset('images/logo.png') }}" alt="Rinconcito Logo" style="height: 90px;" class="mx-auto">
+          
         </a>
     </div>
     <form method="POST" action="{{ route('register') }}">

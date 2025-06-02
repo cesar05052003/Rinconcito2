@@ -16,12 +16,15 @@ class UpdatePedidosCreatedAt extends Migration
      */
     public function up()
     {
+        // Se comenta la actualización masiva para no sobrescribir las fechas created_at y updated_at
+        /*
         $now = Carbon::now('America/Bogota');
 
         DB::table('pedidos')->update([
             'created_at' => $now,
             'updated_at' => $now,
         ]);
+        */
     }
 
     /**

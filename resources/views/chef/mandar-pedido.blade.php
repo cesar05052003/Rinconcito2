@@ -9,7 +9,7 @@
             Regresar
         </a>
     </div>
- <div class="py-12" style="background-color: #FEF3C7;">
+ <div class="py-12" style="background-color: #f4eedb;">
     <div class="py-12 max-w-7xl mx-auto sm:px-6 lg:px-8">
         @if($pedidos->isEmpty())
             <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded">

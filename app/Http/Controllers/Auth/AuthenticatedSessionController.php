@@ -42,7 +42,7 @@ class AuthenticatedSessionController extends Controller
         Auth::login($user, $request->boolean('remember'));
         $request->session()->regenerate();
 
-        switch ($user->tipo_usuario) {
+        switch ($user->role) {
             case 'admin':
                 return redirect()->route('admin.dashboard');
             case 'chef':
@@ -73,6 +73,19 @@ class AuthenticatedSessionController extends Controller
      * Logout user when accessing /arinconcito route.
      */
     public function arinconcito(Request $request): RedirectResponse
+    {
+        Auth::guard('web')->logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('welcome');
+    }
+
+    /**
+     * Destroy an authenticated session for admin and redirect to welcome.
+     */
+    public function destroyAdmin(Request $request): RedirectResponse
     {
         Auth::guard('web')->logout();
 

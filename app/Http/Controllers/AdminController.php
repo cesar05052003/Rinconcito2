@@ -14,14 +14,11 @@ class AdminController extends Controller
     public function index(Request $request)
     {
         // Obtener todos los usuarios sin filtrar por tipo para edición completa
-        $usuarios = User::all();
+        $clientes = User::where('tipo_usuario', 'cliente')->paginate(15);
+        $chefs = User::where('tipo_usuario', 'chef')->paginate(15);
+        $repartidores = User::where('tipo_usuario', 'repartidor')->paginate(15);
 
-        // Filtrar para mostrar en listas por tipo
-        $clientes = $usuarios->where('tipo_usuario', 'cliente');
-        $chefs = $usuarios->where('tipo_usuario', 'chef');
-        $repartidores = $usuarios->where('tipo_usuario', 'repartidor');
-
-        // Obtener datos de reportes de ventas
+        // Obtener datos de reportes de ventas con paginación
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
 
@@ -34,7 +31,7 @@ class AdminController extends Controller
             $query->whereDate('created_at', '<=', $endDate);
         }
 
-        $pedidos = $query->with('plato', 'cliente')->get();
+        $pedidos = $query->with('plato', 'cliente')->paginate(15);
 
         foreach ($pedidos as $pedido) {
             $precio = $pedido->plato->precio ?? 0;
@@ -42,8 +39,6 @@ class AdminController extends Controller
             $pedido->totalCalculado = $precio * $cantidad;
         }
 
-        $totalVentas = $pedidos->sum(fn($pedido) => $pedido->totalCalculado ?? 0);
-        $totalPedidos = $pedidos->count();
         $platos = \App\Models\Plato::all();
 
         $totalesPorPlato = $pedidos->groupBy('plato_id')->map(function ($pedidosPorPlato) {
@@ -58,17 +53,44 @@ class AdminController extends Controller
         });
 
         return view('admin', [
-            'usuarios' => $clientes,
+            'clientes' => $clientes,
             'chefs' => $chefs,
             'repartidores' => $repartidores,
-            'todosUsuarios' => $usuarios,
             'pedidos' => $pedidos,
-            'totalVentas' => $totalVentas,
-            'totalPedidos' => $totalPedidos,
+            'totalVentas' => $pedidos->sum(fn($pedido) => $pedido->totalCalculado ?? 0),
+            'totalPedidos' => $pedidos->total(),
             'startDate' => $startDate,
             'endDate' => $endDate,
             'platos' => $platos,
             'totalesPorPlato' => $totalesPorPlato,
+        ]);
+    }
+
+    public function showChefDetails($id)
+    {
+        $chef = \App\Models\User::where('tipo_usuario', 'chef')->findOrFail($id);
+
+        // Obtener platos del chef
+        $platos = \App\Models\Plato::where('user_id', $chef->id)->get();
+
+        // Obtener ventas por plato
+        $ventasPorPlato = [];
+        foreach ($platos as $plato) {
+            $pedidos = \App\Models\Pedido::where('plato_id', $plato->id)->get();
+            $cantidadVendida = $pedidos->sum('cantidad');
+            $totalVentas = $pedidos->sum(function ($pedido) {
+                return ($pedido->precio_con_descuento ?? 0) * $pedido->cantidad;
+            });
+            $ventasPorPlato[] = [
+                'plato' => $plato,
+                'cantidad_vendida' => $cantidadVendida,
+                'total_ventas' => $totalVentas,
+            ];
+        }
+
+        return view('admin_chef_details', [
+            'chef' => $chef,
+            'ventasPorPlato' => $ventasPorPlato,
         ]);
     }
 

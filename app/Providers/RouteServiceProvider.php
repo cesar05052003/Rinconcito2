@@ -18,7 +18,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         
         // Redirección por rol después de login
-        $this->redirectToByRole();
+        // $this->redirectToByRole();
 
         // Definición de rutas
         $this->routes(function () {
@@ -31,22 +31,22 @@ class RouteServiceProvider extends ServiceProvider
         });
     }
 
-    protected function redirectToByRole()
-    {
-        // Esto se ejecuta solo después de login exitoso
-        app('router')->middleware('web')->pushMiddlewareToGroup('web', function ($request, $next) {
-            if (auth()->check()) {
-                $rol = auth()->user()->tipo_usuario;
-                switch ($rol) {
-                    case 'admin':
-                        return redirect('/admin');
-                    case 'chef':
-                        return redirect('/chef');
-                    case 'cliente':
-                        return redirect('/cliente');
-                }
-            }
-            return $next($request);
-        });
-    }
+    // protected function redirectToByRole()
+    // {
+    //     // Esto se ejecuta solo después de login exitoso
+    //     app('router')->middleware('web')->pushMiddlewareToGroup('web', function ($request, $next) {
+    //         if (auth()->check()) {
+    //             $rol = auth()->user()->tipo_usuario;
+    //             switch ($rol) {
+    //                 case 'admin':
+    //                     return redirect('/admin');
+    //                 case 'chef':
+    //                     return redirect('/chef');
+    //                 case 'cliente':
+    //                     return redirect('/cliente');
+    //             }
+    //         }
+    //         return $next($request);
+    //     });
+    // }
 }

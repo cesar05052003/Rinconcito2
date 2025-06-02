@@ -2,7 +2,7 @@
      <!-- Logo -->
     <div class="text-center mb-4">
         <a href="/">
-            <img src="{{ asset('images/logo.png') }}" alt="Rinconcito Logo" style="height: 80px;" class="mx-auto">
+           
         </a>
     </div>
     <!-- Session Status -->

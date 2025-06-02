@@ -9,7 +9,7 @@
             Regresar
         </a>
     </div>
- <div class="py-12" style="background-color: #FEF3C7;">
+ <div class="py-12" style="background-color: #f4eedb;">
     <div class="py-12 max-w-7xl mx-auto sm:px-6 lg:px-8">
 
         <div class="mb-4">
@@ -24,6 +24,7 @@
             <table class="min-w-full bg-white border">
                 <thead>
                     <tr>
+                        <th class="py-2 px-4 border-b">Imagen</th>
                         <th class="py-2 px-4 border-b">Nombre</th>
                         <th class="py-2 px-4 border-b">Descripción</th>
                         <th class="py-2 px-4 border-b">Precio</th>
@@ -33,6 +34,13 @@
                 <tbody>
                     @foreach($platos as $plato)
                         <tr>
+                        <td class="py-2 px-4 border-b">
+                            @if($plato->imagen)
+                                <img src="{{ asset($plato->imagen) }}" alt="{{ $plato->nombre }}" style="height: 50px; width: auto; object-fit: cover; border-radius: 4px;">
+                            @else
+                                <span>No hay imagen</span>
+                            @endif
+                        </td>
                         <td class="py-2 px-4 border-b">{{ $plato->nombre }}</td>
                         <td class="py-2 px-4 border-b">{{ $plato->descripcion }}</td>
                         <td class="py-2 px-4 border-b">{{ $plato->precio }}</td>
